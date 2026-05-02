@@ -11,10 +11,15 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-const port = 4000;
+const port = process.env.PORT ||4000;
 
 // MIDDLEWARE
-app.use(cors());
+app.use(cors({
+  origin: "https://expense-tracker-frontend-d220.onrender.com",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true
+}));
+app.options("*", cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use("/uploads", express.static("uploads"));

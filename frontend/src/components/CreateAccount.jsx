@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Eye, EyeOff, User, Lock } from "lucide-react";
 
-const CreateAccount = ({ API_URL = "http://localhost:4000" }) => {
+const CreateAccount = ({ API_URL = "https://expense-tracker-backend-fsqm.onrender.com" }) => {
   const { state } = useLocation();
   const navigate = useNavigate();
 

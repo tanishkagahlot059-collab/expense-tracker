@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Mail } from "lucide-react";
 import { motion } from "framer-motion";
 
-const VerifyEmail = ({ API_URL = "http://localhost:4000" }) => {
+const VerifyEmail = ({ API_URL = "https://expense-tracker-backend-fsqm.onrender.com" }) => {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [isOtpSent, setIsOtpSent] = useState(false);

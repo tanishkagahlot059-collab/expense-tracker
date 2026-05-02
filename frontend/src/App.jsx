@@ -10,7 +10,7 @@ import Profile from './pages/Profile';
 import CreateAccount from './components/CreateAccount';
 import VerifyEmail from './components/VerifyEmail';
 
-const API_URL = "http://localhost:4000";
+const API_URL = "https://expense-tracker-backend-fsqm.onrender.com";
 
 // decode JWT expiry
 const getTokenExpiry = (token) => {

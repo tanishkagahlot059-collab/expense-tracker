@@ -15,11 +15,11 @@ const port = process.env.PORT ||4000;
 
 // MIDDLEWARE
 app.use(cors({
-  origin: "https://expense-tracker-frontend-d220.onrender.com",
+  origin: "http://localhost:5173",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true
 }));
-app.options("*", cors());
+
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use("/uploads", express.static("uploads"));

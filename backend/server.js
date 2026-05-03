@@ -15,7 +15,7 @@ const port = process.env.PORT ||4000;
 
 // MIDDLEWARE
 app.use(cors({
-  origin: "http://localhost:4000",
+  origin:"http://localhost:4000",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true
 }));

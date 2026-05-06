@@ -10,7 +10,7 @@ const otpStore = {};
 const verifiedEmails = {};
 
 const createToken = (userId) =>
-    jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: TOKEN_EXPIRES });
+    jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: TOKEN_EXPIRES });
 
 //REGISTER A USER
 export async function registerUser(req, res) {

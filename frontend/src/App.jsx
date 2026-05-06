@@ -10,7 +10,7 @@ import Profile from './pages/Profile';
 import CreateAccount from './components/CreateAccount';
 import VerifyEmail from './components/VerifyEmail';
 
-const API_URL = "http://localhost:4000/api"
+const API_URL = `${import.meta.env.VITE_API_URL}/api`;
 
 // decode JWT expiry
 const getTokenExpiry = (token) => {

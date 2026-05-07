@@ -5,19 +5,24 @@ import { ChevronDown, LogOut, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const BASE_URL = `${import.meta.env.VITE_API_URL}/api` ;
+const BASE_URL = `${import.meta.env.VITE_API_URL}/api`;
 
-const Navbar = ({ user: propUser,  onLogout }) => {
+const Navbar = ({ user: propUser, onLogout }) => {
     const navigate = useNavigate();
     const menuRef = useRef();
     const [menuOpen, setMenuOpen] = useState(false);
 
-    const user = propUser || {
-        name: "",
-        email: "",
-    };
+    // ✅ FIX 1: user state
+    const [user, setUser] = useState(propUser || null);
 
-    // to fetch the user data from server
+    // ✅ sync propUser
+    useEffect(() => {
+        if (propUser) {
+            setUser(propUser);
+        }
+    }, [propUser]);
+
+    // ✅ fetch user if not provided
     useEffect(() => {
         const fetchUserData = async () => {
             try {
@@ -27,12 +32,14 @@ const Navbar = ({ user: propUser,  onLogout }) => {
                 const response = await axios.get(`${BASE_URL}/user/me`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
+
                 const userData = response.data.user || response.data;
-                console.log(userData);
+                setUser(userData); // ✅ IMPORTANT FIX
             } catch (error) {
                 console.error("Failed to load profile", error);
             }
         };
+
         if (!propUser) {
             fetchUserData();
         }
@@ -47,7 +54,6 @@ const Navbar = ({ user: propUser,  onLogout }) => {
         navigate("/login");
     };
 
-    // closes the toggle menu if click outside the box
     useEffect(() => {
         const handleClickOutside = (e) => {
             if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -58,7 +64,7 @@ const Navbar = ({ user: propUser,  onLogout }) => {
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
-    
+
     return (
         <header className={navbarStyles.header}>
             <div className={navbarStyles.container}>
@@ -70,30 +76,52 @@ const Navbar = ({ user: propUser,  onLogout }) => {
                     <span className={navbarStyles.logoText}>Expense Tracker</span>
                 </div>
 
-                {/* if the user is present */}
+                {/* user */}
                 {user && (
-                    <div className={navbarStyles.userContainer} ref={menuRef} >
+                    <div className={navbarStyles.userContainer} ref={menuRef}>
                         <button onClick={toggleMenu} className={navbarStyles.userButton}>
                             <div className="relative">
                                 <div className={navbarStyles.userAvatar}>
-                                    {user?.name?.[0]?.toUpperCase() || "U"}
+                                    {user?.profilePic ? (
+                                        <img
+                                            src={`${import.meta.env.VITE_API_URL}${user.profilePic}`}
+                                            alt="profile"
+                                            className="w-full h-full object-cover rounded-full"
+                                        />
+                                    ) : (
+                                        <span>
+                                            {user?.name?.[0]?.toUpperCase() || "U"}
+                                        </span>
+                                    )}
                                 </div>
                                 <div className={navbarStyles.statusIndicator}></div>
                             </div>
+
                             <div className={navbarStyles.userTextContainer}>
                                 <p className={navbarStyles.userName}>{user?.name || "user"}</p>
-                                <p className={navbarStyles.userEmail}>{user?.email || "tanugahlot23@gmail.com"}</p>
+                                <p className={navbarStyles.userEmail}>{user?.email || "email"}</p>
                             </div>
+
                             <ChevronDown className={navbarStyles.chevronIcon(menuOpen)} />
                         </button>
 
-                        {/* dropdown menu */}
+                        {/* dropdown */}
                         {menuOpen && (
                             <div className={navbarStyles.dropdownMenu}>
                                 <div className={navbarStyles.dropdownHeader}>
-                                    <div className=" flex items-center gap-3">
+                                    <div className="flex items-center gap-3">
+
                                         <div className={navbarStyles.dropdownAvatar}>
-                                            {user?.name?.[0]?.toUpperCase() || "U"}
+                                            {/* ✅ PROFILE PIC FIX */}
+                                            {user?.profilePic ? (
+                                                <img
+                                                    src={`${import.meta.env.VITE_API_URL}${user.profilePic}`}
+                                                    alt="profile"
+                                                    className="w-full h-full rounded-full object-cover"
+                                                />
+                                            ) : (
+                                                user?.name?.[0]?.toUpperCase() || "U"
+                                            )}
                                         </div>
 
                                         <div>
@@ -101,25 +129,28 @@ const Navbar = ({ user: propUser,  onLogout }) => {
                                                 {user?.name || "User"}
                                             </div>
                                             <div className={navbarStyles.dropdownEmail}>
-                                                {user?.email || "tanugahlot23@gmail.com"}
+                                                {user?.email || "email"}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className={navbarStyles.menuItemContainer}>
-                                    <button onClick={() => {
-                                        setMenuOpen(false);
-                                        navigate("/profile");
-                                    }} className={navbarStyles.menuItem}>
-                                        <User className=" w-4 h-4" />
+                                    <button
+                                        onClick={() => {
+                                            setMenuOpen(false);
+                                            navigate("/profile");
+                                        }}
+                                        className={navbarStyles.menuItem}
+                                    >
+                                        <User className="w-4 h-4" />
                                         <span>My Profile</span>
                                     </button>
                                 </div>
 
                                 <div className={navbarStyles.menuItemBorder}>
                                     <button onClick={handleLogout} className={navbarStyles.logoutButton}>
-                                        <LogOut className=" w-4 h-4" />
+                                        <LogOut className="w-4 h-4" />
                                         <span>Log Out</span>
                                     </button>
                                 </div>
@@ -128,9 +159,8 @@ const Navbar = ({ user: propUser,  onLogout }) => {
                     </div>
                 )}
             </div>
-
         </header>
-    )
-}
+    );
+};
 
-export default Navbar
+export default Navbar;

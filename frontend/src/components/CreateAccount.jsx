@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Eye, EyeOff, User, Lock } from "lucide-react";
 
-const CreateAccount = ({ API_URL = "http://localhost:4000/api" }) => {
+const CreateAccount = ({ API_URL = import.meta.env.VITE_API_URL }) => {
   const { state } = useLocation();
   const navigate = useNavigate();
 

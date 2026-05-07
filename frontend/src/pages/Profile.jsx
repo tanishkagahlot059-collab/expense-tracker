@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 
-const BASE_URL =`${import.meta.env.VITE_API_URL}/api`;
+const BASE_URL = `${import.meta.env.VITE_API_URL}/api`;
 
 Modal.setAppElement('#root');
 
@@ -101,6 +101,30 @@ const ProfilePage = ({ user, onUpdateProfile, onLogout }) => {
     setTempUser(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleSaveProfile = async () => {
+    try {
+      const res = await axios.put(
+        `${BASE_URL}/user/profile`,
+        tempUser,
+        {
+          headers: {
+            Authorization: `Bearer ${getAuthToken()}`
+          }
+        }
+      );
+
+      onUpdateProfile?.(res.data.user);
+
+      toast.success("Profile updated");
+
+      setEditMode(false);
+
+    } catch (err) {
+      console.error(err);
+      toast.error("Update failed");
+    }
+  };
+
   const handleLogout = () => {
     onLogout?.();
     navigate("/login");
@@ -121,7 +145,7 @@ const ProfilePage = ({ user, onUpdateProfile, onLogout }) => {
             <div className="relative w-24 h-24">
               {user?.profilePic ? (
                 <img
-                  src={user.profilePic}
+                 src={`${import.meta.env.VITE_API_URL}${user.profilePic}`}
                   alt="profile"
                   className="w-24 h-24 rounded-full object-cover border-2 border-white"
                 />
@@ -194,7 +218,7 @@ const ProfilePage = ({ user, onUpdateProfile, onLogout }) => {
                   />
 
                   <div className="flex gap-3">
-                    <button className={profileStyles.buttonPrimary}>Save</button>
+                    <button onClick={handleSaveProfile} className={profileStyles.buttonPrimary}>Save</button>
                     <button onClick={() => setEditMode(false)} className={profileStyles.buttonSecondary}>Cancel</button>
                   </div>
                 </div>

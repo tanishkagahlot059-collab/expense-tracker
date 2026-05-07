@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Mail } from "lucide-react";
 import { motion } from "framer-motion";
 
-const VerifyEmail = ({ API_URL = `${import.meta.env.VITE_API_URL}/api` }) => {
+const VerifyEmail = ({ API_URL = `${import.meta.env.VITE_API_URL}` }) => {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [isOtpSent, setIsOtpSent] = useState(false);
@@ -25,12 +25,16 @@ const VerifyEmail = ({ API_URL = `${import.meta.env.VITE_API_URL}/api` }) => {
       if (res.data.success) {
         setIsOtpSent(true);
       }
-    } catch (err) {
-      alert(err.response?.data?.message || "Error sending OTP");
-    } finally {
-      setLoading(false);
+      } catch (err) {
+  const msg = err.response?.data?.message || "";
+
+  if (msg.toLowerCase().includes("already")) {
+    navigate("/login");
+  } else {
+    alert(msg || "Error sending OTP");
+  }
+      }
     }
-  };
 
   // HANDLE OTP INPUT
   const handleChange = (value, index) => {

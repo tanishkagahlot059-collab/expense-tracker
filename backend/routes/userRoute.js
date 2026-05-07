@@ -25,7 +25,7 @@ userRouter.put(
     try {
       const userId = req.user.id;
 
-      const imageUrl = `http://localhost:4000/uploads/${req.file.filename}`;
+      const imageUrl = `/uploads/${req.file.filename}`;
 
       const user = await User.findByIdAndUpdate(
         userId,

@@ -226,8 +226,9 @@ export async function updatePassword(req, res) {
 // sendMail 
 export const sendOtp = async (req, res) => {
     try {
+         console.log("SEND OTP ROUTE HIT");
         const { email } = req.body;
-
+ console.log(email);
         // check if already registered
         const isUser = await User.findOne({ email });
         if (isUser) {

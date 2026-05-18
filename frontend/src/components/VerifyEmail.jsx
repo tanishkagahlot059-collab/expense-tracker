@@ -33,6 +33,8 @@ const VerifyEmail = ({ API_URL = `${import.meta.env.VITE_API_URL}` }) => {
   } else {
     alert(msg || "Error sending OTP");
   }
+      } finally {
+        setLoading(false);
       }
     }
 

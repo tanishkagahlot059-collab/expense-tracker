@@ -1,36 +1,35 @@
 import nodemailer from "nodemailer";
 
 export const sendMail = async (email, subject, template) => {
-    try {
+  try {
 
-        console.log("EMAIL USER:", process.env.SENDER_EMAIL);
-        console.log("EMAIL PASS:", process.env.SENDER_PASSWORD);
+    const config = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.SENDER_EMAIL,
+        pass: process.env.SENDER_PASSWORD,
+      },
+    });
 
-        const config = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                user: process.env.SENDER_EMAIL,
-                pass: process.env.SENDER_PASSWORD
-            }
-        });
+    await config.verify();
+    console.log("SMTP Connected");
 
-        const options = {
-            from: process.env.SENDER_EMAIL,
-            to: email,
-            subject,
-            html: template
-        };
-            
-        const info = await config.sendMail(options);
+    const options = {
+      from: process.env.SENDER_EMAIL,
+      to: email,
+      subject: subject,
+      html: template,
+    };
 
-        console.log("MAIL SENT:", info.response);
+    await config.sendMail(options);
 
-        return true;
+    return true;
 
-    } catch (err) {
+  } catch (err) {
 
-        console.log("MAIL ERROR FULL:", err);
-
-        return false;
-    }
+    console.log("MAIL ERROR FULL:", err);
+    return false;
+  }
 };

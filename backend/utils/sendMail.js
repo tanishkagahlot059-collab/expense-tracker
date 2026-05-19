@@ -20,7 +20,7 @@ export const sendMail = async (email, subject, template) => {
             subject,
             html: template
         };
-
+            
         const info = await config.sendMail(options);
 
         console.log("MAIL SENT:", info.response);

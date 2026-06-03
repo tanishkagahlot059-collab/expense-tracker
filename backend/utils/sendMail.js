@@ -3,15 +3,18 @@ import nodemailer from "nodemailer";
 export const sendMail = async (email, subject, template) => {
   try {
 
-    const config = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.SENDER_EMAIL,
-        pass: process.env.SENDER_PASSWORD,
-      },
-    });
+  const config = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.SENDER_EMAIL,
+    pass: process.env.SENDER_PASSWORD,
+  },
+});
+ console.log("SENDER_EMAIL:", process.env.SENDER_EMAIL);
+console.log(
+  "SENDER_PASSWORD:",
+  process.env.SENDER_PASSWORD ? "FOUND" : "MISSING"
+);
 
     await config.verify();
     console.log("SMTP Connected");
@@ -23,11 +26,7 @@ export const sendMail = async (email, subject, template) => {
       html: template,
     };
 
-    console.log("SENDER_EMAIL:", process.env.SENDER_EMAIL);
-console.log(
-  "SENDER_PASSWORD:",
-  process.env.SENDER_PASSWORD ? "FOUND" : "MISSING"
-);
+   
     await config.sendMail(options);
 
     return true;

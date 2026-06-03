@@ -4,23 +4,25 @@ export const sendMail = async (email, subject, template) => {
   try {
 
   const config = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  secure: false,
   auth: {
-    user: process.env.SENDER_EMAIL,
-    pass: process.env.SENDER_PASSWORD,
+    user: process.env.BREVO_LOGIN,
+    pass: process.env.BREVO_PASSWORD,
   },
 });
- console.log("SENDER_EMAIL:", process.env.SENDER_EMAIL);
+ console.log("BREVO_LOGIN:", process.env.BREVO_LOGIN);
 console.log(
-  "SENDER_PASSWORD:",
-  process.env.SENDER_PASSWORD ? "FOUND" : "MISSING"
+  "BREVO_PASSWORD:",
+  process.env.BREVO_PASSWORD ? "FOUND" : "MISSING"
 );
 
     await config.verify();
     console.log("SMTP Connected");
 
     const options = {
-      from: process.env.SENDER_EMAIL,
+      from: process.env.BREVO_LOGIN,
       to: email,
       subject: subject,
       html: template,

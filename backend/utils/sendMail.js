@@ -32,4 +32,9 @@ export const sendMail = async (email, subject, template) => {
     console.log("MAIL ERROR FULL:", err);
     return false;
   }
+  console.log("SENDER_EMAIL:", process.env.SENDER_EMAIL);
+console.log(
+  "SENDER_PASSWORD:",
+  process.env.SENDER_PASSWORD ? "FOUND" : "MISSING"
+);
 };

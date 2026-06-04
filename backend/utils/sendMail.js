@@ -2,41 +2,38 @@ import nodemailer from "nodemailer";
 
 export const sendMail = async (email, subject, template) => {
   try {
+    const config = nodemailer.createTransport({
+      host: "smtp-relay.brevo.com",
+      port: 2525,
+      secure: false,
+      auth: {
+        user: process.env.BREVO_LOGIN,
+        pass: process.env.BREVO_PASSWORD,
+      },
+    });
 
-  const config = nodemailer.createTransport({
-  host: "smtp-relay.brevo.com",
-  port: 2525,
-  secure: false,
-  auth: {
-    user: process.env.BREVO_LOGIN,
-    pass: process.env.BREVO_PASSWORD,
-  },
-});
- console.log("BREVO_LOGIN:", process.env.BREVO_LOGIN);
-console.log(
-  "BREVO_PASSWORD:",
-  process.env.BREVO_PASSWORD ? "FOUND" : "MISSING"
-);
+    console.log("BREVO_LOGIN:", process.env.BREVO_LOGIN);
+    console.log(
+      "BREVO_PASSWORD:",
+      process.env.BREVO_PASSWORD ? "FOUND" : "MISSING"
+    );
 
     await config.verify();
     console.log("SMTP Connected");
 
     const options = {
-      from: process.env.BREVO_LOGIN,
+      from: process.env.SENDER_EMAIL,
       to: email,
       subject: subject,
       html: template,
     };
 
-   
     await config.sendMail(options);
 
+    console.log("Mail Sent Successfully");
     return true;
-
   } catch (err) {
-
     console.log("MAIL ERROR FULL:", err);
     return false;
   }
-  
 };
